@@ -1,14 +1,14 @@
-package com.sun.beans;
+package com.sun.bean;
 
-public class ExperimentResultStatus {
+public class ExperimentEntity {
     private Long userId;
     private Long jobId;
     private String resultStatus;
 
-    public ExperimentResultStatus() {
+    public ExperimentEntity() {
     }
 
-    public ExperimentResultStatus(Long userId, Long jobId, String resultStatus) {
+    public ExperimentEntity(Long userId, Long jobId, String resultStatus) {
         this.userId = userId;
         this.jobId = jobId;
         this.resultStatus = resultStatus;
