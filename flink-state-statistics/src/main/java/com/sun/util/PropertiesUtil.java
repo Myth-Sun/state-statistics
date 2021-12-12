@@ -27,13 +27,13 @@ public class PropertiesUtil {
     }
 
     public static Properties getKafkaProperties(String groupId) {
-        Properties properties = new Properties();
-        properties.put("bootstrap.servers", getProperty("bootstrap.servers"));
-        properties.put("zookeeper.connect", getProperty("zookeeper.connect"));
-        properties.put("group.id", groupId);
-        properties.put("auto.offset.reset", "latest");
-        properties.put("key.deserializer", getProperty("kafka.stringDeserializer"));
-        properties.put("value.deserializer", getProperty("kafka.stringDeserializer"));
-        return properties;
+        Properties kafkaProperties = new Properties();
+        kafkaProperties.put("bootstrap.servers", getProperty("kafka.bootstrap.servers"));
+        kafkaProperties.put("zookeeper.connect", getProperty("kafka.zookeeper.connect"));
+        kafkaProperties.put("group.id", groupId);
+        kafkaProperties.put("auto.offset.reset", getProperty("kafka.auto.offset.reset"));
+        kafkaProperties.put("key.deserializer", getProperty("kafka.stringDeserializer"));
+        kafkaProperties.put("value.deserializer", getProperty("kafka.stringDeserializer"));
+        return kafkaProperties;
     }
 }
