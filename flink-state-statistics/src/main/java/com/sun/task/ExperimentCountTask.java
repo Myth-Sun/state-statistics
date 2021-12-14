@@ -14,16 +14,17 @@ import org.apache.flink.streaming.api.functions.timestamps.BoundedOutOfOrderness
 import org.apache.flink.streaming.api.windowing.time.Time;
 import org.apache.flink.streaming.connectors.kafka.FlinkKafkaConsumer;
 
+import java.net.URL;
 import java.util.Properties;
 
 public class ExperimentCountTask {
     public static void main(String[] args) throws Exception {
         StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
         env.setStreamTimeCharacteristic(TimeCharacteristic.EventTime);
-        Properties properties = PropertiesUtil.getKafkaProperties("slurm-job-info");
-        DataStreamSource<String> inputStream = env.addSource(new FlinkKafkaConsumer<String>("user-job", new SimpleStringSchema(), properties));
-//        URL resource = ExperimentCountTask.class.getResource("/UserJobInfo.csv");
-//        DataStream<String> inputStream = env.readTextFile(resource.getPath());
+//        Properties properties = PropertiesUtil.getKafkaProperties("slurm-job-info");
+//        DataStreamSource<String> inputStream = env.addSource(new FlinkKafkaConsumer<String>("user-job", new SimpleStringSchema(), properties));
+        URL resource = ExperimentCountTask.class.getResource("/UserJobInfo.csv");
+        DataStream<String> inputStream = env.readTextFile(resource.getPath());
 
         DataStream<UserJobInfoEntity> dataStream = inputStream.map(new UserJobInfoMapFunction())
                 .assignTimestampsAndWatermarks(new BoundedOutOfOrdernessTimestampExtractor<UserJobInfoEntity>(Time.seconds(10)) {
@@ -34,8 +35,8 @@ public class ExperimentCountTask {
                     }
                 });
 
-        DataStream<String> resultDataStream = dataStream.process(new JobCountProcessFunction())
-                .setParallelism(1);//设置并行度为1，避免并发问题
+        DataStream<String> resultDataStream = dataStream.process(new JobCountProcessFunction());
+//                .setParallelism(1);//设置并行度为1，避免并发问题
         env.execute();
     }
 
