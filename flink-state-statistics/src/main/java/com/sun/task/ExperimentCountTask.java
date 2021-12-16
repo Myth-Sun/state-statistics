@@ -21,10 +21,10 @@ public class ExperimentCountTask {
     public static void main(String[] args) throws Exception {
         StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
         env.setStreamTimeCharacteristic(TimeCharacteristic.EventTime);
-//        Properties properties = PropertiesUtil.getKafkaProperties("slurm-job-info");
-//        DataStreamSource<String> inputStream = env.addSource(new FlinkKafkaConsumer<String>("user-job", new SimpleStringSchema(), properties));
-        URL resource = ExperimentCountTask.class.getResource("/UserJobInfo.csv");
-        DataStream<String> inputStream = env.readTextFile(resource.getPath());
+        Properties properties = PropertiesUtil.getKafkaProperties("slurm-job-info");
+        DataStreamSource<String> inputStream = env.addSource(new FlinkKafkaConsumer<String>("user-job", new SimpleStringSchema(), properties));
+//        URL resource = ExperimentCountTask.class.getResource("/UserJobInfo.csv");
+//        DataStream<String> inputStream = env.readTextFile(resource.getPath());
 
         DataStream<UserJobInfoEntity> dataStream = inputStream.map(new UserJobInfoMapFunction())
                 .assignTimestampsAndWatermarks(new BoundedOutOfOrdernessTimestampExtractor<UserJobInfoEntity>(Time.seconds(10)) {
